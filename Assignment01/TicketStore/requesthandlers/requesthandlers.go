@@ -21,6 +21,16 @@ func GetAvailableTickets(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	auth := r.Header.Get("Authorization")
+	if auth != constants.ClientApikey {
+		w.WriteHeader(http.StatusUnauthorized)
+		errorrespponse.ErrorCode = constants.ErrorCodeAuthError
+		errorrespponse.ErrorMsg = constants.ErrorStringAuthError
+		jsondata, _ := json.Marshal(errorrespponse)
+		w.Write(jsondata)
+		return
+	}
+
 	log.Printf("Request Received : %s GetAvailableTickets\n", r.Method)
 
 	tickets := ticketsrepo.GetAvailableTickets()
@@ -42,6 +52,16 @@ func PreBookTickets(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		errorrespponse.ErrorCode = constants.ErrorCodeBadRequest
 		errorrespponse.ErrorMsg = constants.ErrorStringCodeBadRequest
+		jsondata, _ := json.Marshal(errorrespponse)
+		w.Write(jsondata)
+		return
+	}
+
+	auth := r.Header.Get("Authorization")
+	if auth != constants.ClientApikey {
+		w.WriteHeader(http.StatusUnauthorized)
+		errorrespponse.ErrorCode = constants.ErrorCodeAuthError
+		errorrespponse.ErrorMsg = constants.ErrorStringAuthError
 		jsondata, _ := json.Marshal(errorrespponse)
 		w.Write(jsondata)
 		return
@@ -99,6 +119,16 @@ func ConfirmPreBookTickets(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	auth := r.Header.Get("Authorization")
+	if auth != constants.ClientApikey {
+		w.WriteHeader(http.StatusUnauthorized)
+		errorrespponse.ErrorCode = constants.ErrorCodeAuthError
+		errorrespponse.ErrorMsg = constants.ErrorStringAuthError
+		jsondata, _ := json.Marshal(errorrespponse)
+		w.Write(jsondata)
+		return
+	}
+
 	log.Printf("Request Received : %s ConfirmPreBookTickets\n", r.Method)
 
 	payload, _ := ioutil.ReadAll(r.Body)
@@ -146,6 +176,16 @@ func RestorePreBookedTickets(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		errorrespponse.ErrorCode = constants.ErrorCodeBadRequest
 		errorrespponse.ErrorMsg = constants.ErrorStringCodeBadRequest
+		jsondata, _ := json.Marshal(errorrespponse)
+		w.Write(jsondata)
+		return
+	}
+
+	auth := r.Header.Get("Authorization")
+	if auth != constants.ClientApikey {
+		w.WriteHeader(http.StatusUnauthorized)
+		errorrespponse.ErrorCode = constants.ErrorCodeAuthError
+		errorrespponse.ErrorMsg = constants.ErrorStringAuthError
 		jsondata, _ := json.Marshal(errorrespponse)
 		w.Write(jsondata)
 		return
