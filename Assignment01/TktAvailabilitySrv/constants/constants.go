@@ -2,8 +2,8 @@ package constants
 
 type Errorcodes = int
 
-const GetAvailableTicketsURL string = "http://localhost:8070/GetAvailableTickets"
-const Apikey string = "abcd@12345"
+const GetAvailableTicketsURL string = "http://localhost:8050/GetAvailableTickets"
+const TktStoreApikey string = "abcd@12345"
 
 // Error codes
 const (

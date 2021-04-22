@@ -14,8 +14,8 @@ func startServing() {
 
 	registerRouts()
 
-	log.Println("Starting Server on port : 8080")
-	err := http.ListenAndServe(":8080", nil)
+	log.Println("Starting Server on port : 8060")
+	err := http.ListenAndServe(":8060", nil)
 
 	if err != nil {
 		log.Println(err)
