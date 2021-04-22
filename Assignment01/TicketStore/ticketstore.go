@@ -29,6 +29,9 @@ func startServing() {
 func registerRouts() {
 	http.HandleFunc("/GetAvailableTickets", requesthandlers.GetAvailableTickets)
 	http.HandleFunc("/PreBookTickets", requesthandlers.PreBookTickets)
+	http.HandleFunc("/ConfirmPreBookTickets", requesthandlers.ConfirmPreBookTickets)
+	http.HandleFunc("/RestorePreBookedTickets", requesthandlers.RestorePreBookedTickets)
+
 }
 
 // Genetare Tickets for a show

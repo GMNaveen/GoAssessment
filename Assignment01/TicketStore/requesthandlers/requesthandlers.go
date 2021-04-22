@@ -84,3 +84,99 @@ func PreBookTickets(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(jsondata)
 }
+
+func ConfirmPreBookTickets(w http.ResponseWriter, r *http.Request) {
+	var bookingConfirmedTickets models.BookedTicketList
+	var bookingId int
+	var errorcode constants.Errorcodes
+
+	if r.Method != http.MethodPost {
+		w.WriteHeader(http.StatusBadRequest)
+		errorrespponse.ErrorCode = constants.ErrorCodeBadRequest
+		errorrespponse.ErrorMsg = constants.ErrorStringCodeBadRequest
+		jsondata, _ := json.Marshal(errorrespponse)
+		w.Write(jsondata)
+		return
+	}
+
+	log.Printf("Request Received : %s ConfirmPreBookTickets\n", r.Method)
+
+	payload, _ := ioutil.ReadAll(r.Body)
+
+	err := json.Unmarshal(payload, &bookingConfirmedTickets)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		errorrespponse.ErrorCode = constants.ErrorCodeBadRequest
+		errorrespponse.ErrorMsg = constants.ErrorStringCodeBadRequest
+		jsondata, _ := json.Marshal(errorrespponse)
+		w.Write(jsondata)
+		return
+	}
+
+	bookingId, errorcode, err = ticketsrepo.ConfirmBookedTickets(bookingConfirmedTickets)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		errorrespponse.ErrorCode = errorcode
+		errorrespponse.ErrorMsg = err.Error()
+		jsondata, _ := json.Marshal(errorrespponse)
+		w.Write(jsondata)
+		return
+	}
+
+	// On success, store Booking id and return
+	for i := 0; i < len(bookingConfirmedTickets.BookedTickets); i++ {
+		bookingConfirmedTickets.BookedTickets[i].BookingId = bookingId
+	}
+
+	jsondata, _ := json.Marshal(bookingConfirmedTickets)
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsondata)
+
+}
+
+func RestorePreBookedTickets(w http.ResponseWriter, r *http.Request) {
+	var ticketsPrebookedForRevert models.PreBookTicketList
+	var errorcode constants.Errorcodes
+
+	if r.Method != http.MethodPost {
+		w.WriteHeader(http.StatusBadRequest)
+		errorrespponse.ErrorCode = constants.ErrorCodeBadRequest
+		errorrespponse.ErrorMsg = constants.ErrorStringCodeBadRequest
+		jsondata, _ := json.Marshal(errorrespponse)
+		w.Write(jsondata)
+		return
+	}
+
+	log.Printf("Request Received : %s RestorePreBookedTickets\n", r.Method)
+
+	payload, _ := ioutil.ReadAll(r.Body)
+
+	err := json.Unmarshal(payload, &ticketsPrebookedForRevert)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		errorrespponse.ErrorCode = constants.ErrorCodeBadRequest
+		errorrespponse.ErrorMsg = constants.ErrorStringCodeBadRequest
+		jsondata, _ := json.Marshal(errorrespponse)
+		w.Write(jsondata)
+		return
+	}
+
+	errorcode, err = ticketsrepo.RevertPreBookedTickets(ticketsPrebookedForRevert)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		errorrespponse.ErrorCode = errorcode
+		errorrespponse.ErrorMsg = err.Error()
+		jsondata, _ := json.Marshal(errorrespponse)
+		w.Write(jsondata)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Tickets Reverted"))
+}

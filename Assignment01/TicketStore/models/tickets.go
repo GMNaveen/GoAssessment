@@ -24,6 +24,10 @@ type PreBookedTicket struct {
 	CustomerMobileNo string `json:"customermobile"`
 }
 
+type BookedTicketList struct {
+	BookedTickets []BookedTicket `json:"bookedtickets"`
+}
+
 type BookedTicket struct {
 	BookingId        int    `json:"boookingid"`
 	TicketId         int    `json:"ticketid"`
