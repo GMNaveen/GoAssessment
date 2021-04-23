@@ -104,6 +104,8 @@ func GetTicketsFromCartIntoModel(pCartId int) (models.TicketsListForCart, error)
 		return models.TicketsListForCart{}, err
 	}
 
+	defer response.Body.Close()
+
 	payload, _ := ioutil.ReadAll(response.Body)
 
 	err = json.Unmarshal(payload, &ticketsFromCartForBooking)
@@ -149,6 +151,8 @@ func InitiateBookingForCartTickets(pCartId int) (*http.Response, error) {
 	if res.StatusCode != http.StatusOK {
 		return res, err
 	}
+
+	defer res.Body.Close()
 
 	// Check if body received is of type ErrorResponse. If so send back the error response as it is
 	payload, _ := ioutil.ReadAll(res.Body)
