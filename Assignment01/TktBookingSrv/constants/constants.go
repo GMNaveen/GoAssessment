@@ -3,6 +3,10 @@ package constants
 type Errorcodes = int
 
 const GetTicketsFromUserCartURL string = "http://localhost:8070/GetTicketsFromUserCart"
+const PreBookTicketsForTicketStoreSrvURL string = "http://localhost:8050/PreBookTickets"
+const ConfirmBookedTicketsForTicketStoreSrvURL string = "http://localhost:8050/ConfirmPreBookTickets"
+const ClearPreBookTicketsForTicketStoreSrvURL string = "http://localhost:8050/RestorePreBookedTickets"
+
 const TktStoreApikey string = "abcd@12345"
 const TktCartSrvApikey string = "abcd@123456"
 

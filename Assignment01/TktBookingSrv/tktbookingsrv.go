@@ -24,5 +24,6 @@ func startServing() {
 }
 
 func registerRouts() {
-	http.HandleFunc("/GetTicketsFromCart", requesthandlers.GetTicketsFromCart)
+	//http.HandleFunc("/GetTicketsFromCart", requesthandlers.GetTicketsFromCart)
+	http.HandleFunc("/InitiateBookingForCartTickets", requesthandlers.InitiateBookingForCartTickets)
 }
