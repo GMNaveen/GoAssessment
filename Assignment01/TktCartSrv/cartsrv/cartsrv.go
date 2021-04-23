@@ -11,11 +11,26 @@ var cartIdGenerator = 1
 
 var lock = sync.RWMutex{}
 
-func GetCartTickets() []models.TicketsCart {
+func GetAllCartTickets() []models.TicketsCart {
 	var cartTickets []models.TicketsCart
 
 	lock.RLock()
 	cartTickets = cartTicketList
+	lock.RUnlock()
+
+	return cartTickets
+}
+
+func GetCartTickets(pCartId int) []models.TicketsCart {
+	var cartTickets []models.TicketsCart
+
+	cartTickets = make([]models.TicketsCart, 0)
+	lock.RLock()
+	for i := 0; i < len(cartTicketList); i++ {
+		if cartTicketList[i].CartID == pCartId {
+			cartTickets = append(cartTickets, cartTicketList[i])
+		}
+	}
 	lock.RUnlock()
 
 	return cartTickets

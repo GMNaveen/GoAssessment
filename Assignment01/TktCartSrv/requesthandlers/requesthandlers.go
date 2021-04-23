@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
+	"strconv"
 	"tktcartsrv/cartsrv"
 	"tktcartsrv/constants"
 	"tktcartsrv/models"
@@ -12,7 +14,29 @@ import (
 
 var errorrespponse models.ErrorResponse
 
+func GetAllTicketsFromUserCart(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		errorrespponse.ErrorCode = constants.ErrorCodeBadRequest
+		errorrespponse.ErrorMsg = constants.ErrorStringCodeBadRequest
+		jsondata, _ := json.Marshal(errorrespponse)
+		w.Write(jsondata)
+		return
+	}
+
+	log.Printf("Request Received : %s GetAllTicketsFromUserCart\n", r.Method)
+
+	cartTickets := cartsrv.GetAllCartTickets()
+	jsondata, _ := json.Marshal(cartTickets)
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsondata)
+
+	log.Println("All Cart Tickets returned.")
+}
+
 func GetTicketsFromUserCart(w http.ResponseWriter, r *http.Request) {
+	var cartId int
 	if r.Method != http.MethodGet {
 		errorrespponse.ErrorCode = constants.ErrorCodeBadRequest
 		errorrespponse.ErrorMsg = constants.ErrorStringCodeBadRequest
@@ -23,7 +47,12 @@ func GetTicketsFromUserCart(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("Request Received : %s GetTicketsFromUserCart\n", r.Method)
 
-	cartTickets := cartsrv.GetCartTickets()
+	m, _ := url.ParseQuery(r.URL.RawQuery)
+
+	//log.Println(m["cartid"][0])
+	cartId, _ = strconv.Atoi(m["cartid"][0])
+
+	cartTickets := cartsrv.GetCartTickets(cartId)
 	jsondata, _ := json.Marshal(cartTickets)
 
 	w.Header().Add("Content-Type", "application/json")
