@@ -12,4 +12,9 @@ Create 3 micro-services
 
 
 <h1>Assessment 02 : </h1>
-WIP
+Build a sample Go app where you have a list of users, each with properties like Name, email, mobile,
+etc. Each user also has their preferred way of getting notification from app for. e.g. via email, SMS,
+call.
+
+<h2>Some points on solution:</h2>
+<p>Implemented Notification using interface feature of golang.</p>
