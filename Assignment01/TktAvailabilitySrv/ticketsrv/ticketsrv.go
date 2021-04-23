@@ -15,6 +15,9 @@ func GetAvailableTickets() (*http.Response, error) {
 	client := &http.Client{}
 
 	response, err := client.Do(request)
+	if err != nil {
+		return nil, err
+	}
 
 	return response, err
 }

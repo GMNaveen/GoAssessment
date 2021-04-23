@@ -24,6 +24,18 @@ func GetAvailableTickets(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Request Received : %s GetAvailableTickets\n", r.Method)
 
 	ticketsjsondata, err := ticketsrv.GetAvailableTickets()
+
+	if (err != nil) && (ticketsjsondata == nil) {
+		errorrespponse.ErrorCode = constants.ErrorCodeTicketServerNotResponsing
+		errorrespponse.ErrorMsg = constants.ErrorStringTicketServerNotResponsing
+		jsondata, _ := json.Marshal(errorrespponse)
+		w.Write(jsondata)
+		return
+	}
+
+	// We will be closing the response after processing received data
+	defer ticketsjsondata.Body.Close()
+
 	jsondata, _ := ioutil.ReadAll(ticketsjsondata.Body)
 
 	if err != nil {
