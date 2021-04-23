@@ -21,14 +21,14 @@ func GetAllCartTickets() []models.TicketsCart {
 	return cartTickets
 }
 
-func GetCartTickets(pCartId int) []models.TicketsCart {
-	var cartTickets []models.TicketsCart
+func GetCartTickets(pCartId int) models.TicketsListForCart {
+	var cartTickets models.TicketsListForCart
 
-	cartTickets = make([]models.TicketsCart, 0)
+	cartTickets.Tickets = make([]models.TicketsCart, 0)
 	lock.RLock()
 	for i := 0; i < len(cartTicketList); i++ {
 		if cartTicketList[i].CartID == pCartId {
-			cartTickets = append(cartTickets, cartTicketList[i])
+			cartTickets.Tickets = append(cartTickets.Tickets, cartTicketList[i])
 		}
 	}
 	lock.RUnlock()

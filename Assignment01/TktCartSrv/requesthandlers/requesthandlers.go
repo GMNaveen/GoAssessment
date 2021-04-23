@@ -45,6 +45,16 @@ func GetTicketsFromUserCart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	auth := r.Header.Get("Authorization")
+	if auth != constants.ClientApikey {
+		w.WriteHeader(http.StatusUnauthorized)
+		errorrespponse.ErrorCode = constants.ErrorCodeAuthError
+		errorrespponse.ErrorMsg = constants.ErrorStringAuthError
+		jsondata, _ := json.Marshal(errorrespponse)
+		w.Write(jsondata)
+		return
+	}
+
 	log.Printf("Request Received : %s GetTicketsFromUserCart\n", r.Method)
 
 	m, _ := url.ParseQuery(r.URL.RawQuery)
